@@ -3,10 +3,13 @@ package com.task_manager.Task_manager.controller;
 import com.task_manager.Task_manager.dto.auth.LoginRequest;
 import com.task_manager.Task_manager.dto.auth.LoginResponse;
 import com.task_manager.Task_manager.dto.auth.RegisterRequest;
+import com.task_manager.Task_manager.entity.User;
 import com.task_manager.Task_manager.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -32,5 +35,12 @@ public class AuthController {
 
         authService.register(request);
         return ResponseEntity.ok("User registered successfully");
+    }
+
+    @GetMapping("/me")
+    public User getCurrentUser(){
+        return (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
     }
 }
