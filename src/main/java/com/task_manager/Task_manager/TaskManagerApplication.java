@@ -45,7 +45,7 @@ public class TaskManagerApplication {
 			// Set system properties for each environment variable
 			dotenv.entries().forEach(entry -> {
 				String key = entry.getKey();
-				String value = entry.getValue();
+				String value = entry.getValue();tatus
 				System.setProperty(key, value);
 			});
 
