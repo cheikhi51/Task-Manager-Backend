@@ -1,1 +1,1 @@
-### Backend API fro the task-manager application ###
+### Backend API for the task-manager application ###
