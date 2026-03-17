@@ -1,0 +1,63 @@
+package com.taskManager.TaskManager.controller;
+
+import com.taskManager.TaskManager.dto.task.TaskRequest;
+import com.taskManager.TaskManager.dto.task.TaskResponse;
+import com.taskManager.TaskManager.entity.User;
+import com.taskManager.TaskManager.service.TaskService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:5173/")
+public class TaskController {
+
+    private final TaskService taskService;
+
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
+    private User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+    }
+
+    @PostMapping("/projects/{projectId}/tasks")
+    public ResponseEntity<TaskResponse> createTask(
+            @PathVariable Long projectId,
+            @Valid @RequestBody TaskRequest request) {
+
+        User user = getCurrentUser();
+        return ResponseEntity.ok(taskService.createTask(projectId, request, user));
+    }
+
+    @GetMapping("/projects/{projectId}/tasks")
+    public ResponseEntity<List<TaskResponse>> getProjectTasks(
+            @PathVariable Long projectId) {
+
+        User user = getCurrentUser();
+        return ResponseEntity.ok(taskService.getProjectTasks(projectId, user));
+    }
+
+    @PutMapping("/tasks/{taskId}/complete")
+    public ResponseEntity<Void> completeTask(@PathVariable Long taskId) {
+
+        User user = getCurrentUser();
+        taskService.markTaskCompleted(taskId, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/tasks/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+
+        User user = getCurrentUser();
+        taskService.deleteTask(taskId, user);
+        return ResponseEntity.noContent().build();
+    }
+}
