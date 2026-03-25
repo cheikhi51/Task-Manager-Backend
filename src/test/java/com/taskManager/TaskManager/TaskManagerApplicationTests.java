@@ -8,6 +8,7 @@ class TaskManagerApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// This is an empty method
 	}
 
 }
